@@ -15,14 +15,26 @@ API gRPC para gerenciamento de categorias, com chamadas simples e streaming, esc
 ### 🗂️ Estrutura do projeto
 
 ```
-.
+grpc/
 ├── cmd/
-│   └── grpcServer/      # Entrypoint do servidor gRPC
-├── database/            # Lógica de persistência com SQLite
-├── pb/                  # Arquivos gerados via protoc
-├── proto/               # Arquivos .proto com definição da API
-└── go.mod / go.sum
+│   └── server/
+│       └── main.go
+├── internal/
+│   ├── database/
+│   ├── pb/
+│   └── services/
+├── proto/
+│   └── category.proto
+├── go.mod
+└── go.sum
+
 ```
+
+cmd/server/main.go: Ponto de entrada do servidor gRPC.
+internal/database: Configuração e acesso ao banco de dados SQLite.
+internal/pb: Código gerado a partir dos arquivos .proto.
+internal/services: Implementações dos serviços gRPC.
+proto/category.proto: Definição das mensagens e serviços gRPC.
 
 ---
 
@@ -124,6 +136,12 @@ id (TYPE_STRING) => <id-da-categoria>
 
 ### 🌊 Streaming: Criar streaming de categorias `CategoryStream`
 
+
+O método `CreateCategoryStream` permite o envio de múltiplas categorias via *stream*, e ao final retorna a lista completa.
+
+Esse tipo de recurso é útil para processar grandes volumes de dados ou comunicação contínua entre cliente e servidor.
+
+
 ```bash
 call CategoryStream
 ```
@@ -157,8 +175,6 @@ description (TYPE_STRING) => Linguagem do Google
 }
 ```
 
-> A resposta retorna um stream contínuo de categorias. Cada item é recebido separadamente, ideal para casos com grande volume de dados.
-
 ---
 
 ## Gerar os arquivos Go a partir do arquivo .proto:
@@ -166,5 +182,3 @@ description (TYPE_STRING) => Linguagem do Google
 ```bash
 protoc --go_out=. --go-grpc_out=. proto/course_category.proto
 ```
-
-

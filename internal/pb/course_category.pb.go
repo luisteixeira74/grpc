@@ -321,10 +321,11 @@ const file_proto_course_category_proto_rawDesc = "" +
 	"\x10CategoryResponse\x12(\n" +
 	"\bcategory\x18\x01 \x01(\v2\f.pb.CategoryR\bcategory\"$\n" +
 	"\x12CategoryGetRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id2\x8f\x02\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id2\xe3\x02\n" +
 	"\x0fCategoryService\x12C\n" +
 	"\x0eCreateCategory\x12\x19.pb.CreateCategoryRequest\x1a\x14.pb.CategoryResponse\"\x00\x12G\n" +
-	"\x14CreateCategoryStream\x12\x19.pb.CreateCategoryRequest\x1a\x10.pb.CategoryList\"\x00(\x01\x12/\n" +
+	"\x14CreateCategoryStream\x12\x19.pb.CreateCategoryRequest\x1a\x10.pb.CategoryList\"\x00(\x01\x12R\n" +
+	"!CreateCategoryStreamBidirectional\x12\x19.pb.CreateCategoryRequest\x1a\f.pb.Category\"\x00(\x010\x01\x12/\n" +
 	"\x0eListCategories\x12\t.pb.blank\x1a\x10.pb.CategoryList\"\x00\x12=\n" +
 	"\vGetCategory\x12\x16.pb.CategoryGetRequest\x1a\x14.pb.CategoryResponse\"\x00B\rZ\vinternal/pbb\x06proto3"
 
@@ -354,14 +355,16 @@ var file_proto_course_category_proto_depIdxs = []int32{
 	1, // 1: pb.CategoryResponse.category:type_name -> pb.Category
 	2, // 2: pb.CategoryService.CreateCategory:input_type -> pb.CreateCategoryRequest
 	2, // 3: pb.CategoryService.CreateCategoryStream:input_type -> pb.CreateCategoryRequest
-	0, // 4: pb.CategoryService.ListCategories:input_type -> pb.blank
-	5, // 5: pb.CategoryService.GetCategory:input_type -> pb.CategoryGetRequest
-	4, // 6: pb.CategoryService.CreateCategory:output_type -> pb.CategoryResponse
-	3, // 7: pb.CategoryService.CreateCategoryStream:output_type -> pb.CategoryList
-	3, // 8: pb.CategoryService.ListCategories:output_type -> pb.CategoryList
-	4, // 9: pb.CategoryService.GetCategory:output_type -> pb.CategoryResponse
-	6, // [6:10] is the sub-list for method output_type
-	2, // [2:6] is the sub-list for method input_type
+	2, // 4: pb.CategoryService.CreateCategoryStreamBidirectional:input_type -> pb.CreateCategoryRequest
+	0, // 5: pb.CategoryService.ListCategories:input_type -> pb.blank
+	5, // 6: pb.CategoryService.GetCategory:input_type -> pb.CategoryGetRequest
+	4, // 7: pb.CategoryService.CreateCategory:output_type -> pb.CategoryResponse
+	3, // 8: pb.CategoryService.CreateCategoryStream:output_type -> pb.CategoryList
+	1, // 9: pb.CategoryService.CreateCategoryStreamBidirectional:output_type -> pb.Category
+	3, // 10: pb.CategoryService.ListCategories:output_type -> pb.CategoryList
+	4, // 11: pb.CategoryService.GetCategory:output_type -> pb.CategoryResponse
+	7, // [7:12] is the sub-list for method output_type
+	2, // [2:7] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name

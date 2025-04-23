@@ -1,203 +1,170 @@
-📡 Projeto gRPC com Go e SQLite
-Este projeto demonstra uma implementação simples de um serviço gRPC em Go, utilizando SQLite como banco de dados e Evans como cliente CLI para testes interativos.
+## 📦 gRPC com Go
 
-📦 Requisitos
-Go 1.19+
+API gRPC para gerenciamento de categorias, com chamadas simples e streaming, escrita em Go com banco SQLite.
 
-protoc (Protocol Buffers Compiler)
+---
 
-SQLite
+### 🔗 Bibliotecas utilizadas
 
-Evans (CLI gRPC)
+- [`google.golang.org/grpc`](https://pkg.go.dev/google.golang.org/grpc) — Framework gRPC para Go  
+- [`evans`](https://github.com/ktr0731/evans) — Cliente gRPC interativo via linha de comando  
+- [`protoc`](https://grpc.io/docs/protoc-installation/) — Compilador Protocol Buffers
 
-🗃️ Script do Banco de Dados
-Para criar a tabela de categorias manualmente, execute:
+---
 
-bash
-Copiar
-Editar
-sqlite3 db.sqlite
-CREATE TABLE categories (id string, name string, description string);
-🚀 Executando o Servidor
-Abra dois terminais:
+### 🗂️ Estrutura do projeto
 
-🖥️ Terminal 1 - Iniciar o servidor gRPC
-bash
-Copiar
-Editar
-go run cmd/grpcServer/main.go
-🧪 Terminal 2 - Acessar o cliente Evans
-bash
-Copiar
-Editar
-evans -r repl
-Configurar o pacote e serviço:
-
-bash
-Copiar
-Editar
-> package pb
-> service CategoryService
-✍️ Criar Categoria
-Chame o método CreateCategory e preencha os campos:
-
-plaintext
-Copiar
-Editar
-name (TYPE_STRING) => meu name
-description (TYPE_STRING) => my descrip
-Resposta esperada:
-
-json
-Copiar
-Editar
-{
-  "category": {
-    "description": "my descrip",
-    "id": "ae026098-6d9a-47a2-a31b-db4789d820e9",
-    "name": "meu name"
-  }
-}
-🛠️ Gerar arquivos .proto
-Compile os arquivos .proto:
-
-bash
-Copiar
-Editar
-protoc --go_out=. --go-grpc_out=. proto/course_category.proto
-📚 Exemplos Práticos com Evans
-No terminal Evans:
-
-bash
-Copiar
-Editar
-> package pb
-> service CategoryService
-✅ Criar nova categoria:
-Chame o método CreateCategory e preencha os campos:
-
-plaintext
-Copiar
-Editar
-name (TYPE_STRING) => name 2
-description (TYPE_STRING) => desc 2
-Resposta esperada:
-
-json
-Copiar
-Editar
-{
-  "category": {
-    "description": "desc 2",
-    "id": "22c832ad-11e6-4113-ab5f-fe78fc6dfbb4",
-    "name": "name 2"
-  }
-}
-📋 Listar todas as categorias:
-Chame o método ListCategories:
-
-bash
-Copiar
-Editar
-call ListCategories
-Resposta esperada:
-
-json
-Copiar
-Editar
-{
-  "categories": [
-    {
-      "description": "my descrip",
-      "id": "ae026098-6d9a-47a2-a31b-db4789d820e9",
-      "name": "meu name"
-    },
-    {
-      "description": "desc 2",
-      "id": "22c832ad-11e6-4113-ab5f-fe78fc6dfbb4",
-      "name": "name 2"
-    }
-  ]
-}
-🔍 Buscar categoria por ID:
-Chame o método GetCategory e preencha com o ID da categoria:
-
-plaintext
-Copiar
-Editar
-id (TYPE_STRING) => 22c832ad-11e6-4113-ab5f-fe78fc6dfbb4
-Resposta esperada:
-
-json
-Copiar
-Editar
-{
-  "category": {
-    "description": "desc 2",
-    "id": "22c832ad-11e6-4113-ab5f-fe78fc6dfbb4",
-    "name": "name 2"
-  }
-}
-📡 Streaming de Categorias
-Este projeto também demonstra o uso de gRPC com Server Streaming, através do método CreateCategoryStream.
-
-O que faz?
-Permite enviar várias categorias via streaming do cliente para o servidor. Ao finalizar o envio, o servidor retorna a lista completa de categorias criadas.
-
-Esse padrão é útil em situações como:
-
-Upload em lote de dados
-
-Comunicação contínua entre serviços
-
-Redução de overhead em múltiplas requisições
-
-🧪 Como testar no Evans:
-Chame o método CreateCategoryStream e preencha múltiplas categorias:
-
-plaintext
-Copiar
-Editar
-name (TYPE_STRING) => Categoria A
-description (TYPE_STRING) => Primeira
-
-name (TYPE_STRING) => Categoria B
-description (TYPE_STRING) => Segunda
-Finalize com Ctrl+D (EOF).
-
-Resposta esperada:
-
-json
-Copiar
-Editar
-{
-  "categories": [
-    {
-      "id": "...",
-      "name": "Categoria A",
-      "description": "Primeira"
-    },
-    {
-      "id": "...",
-      "name": "Categoria B",
-      "description": "Segunda"
-    }
-  ]
-}
-📂 Estrutura de Pastas
-plaintext
-Copiar
-Editar
+```
 .
 ├── cmd/
-│   └── grpcServer/
-│       └── main.go
-├── internal/
-│   ├── pb/             # Código gerado do .proto
-│   ├── database/       # Acesso ao SQLite
-│   └── services/       # Implementação dos serviços
-├── proto/
-│   └── course_category.proto
-├── db.sqlite
-├── go.mod
-└── go.sum
+│   └── grpcServer/      # Entrypoint do servidor gRPC
+├── database/            # Lógica de persistência com SQLite
+├── pb/                  # Arquivos gerados via protoc
+├── proto/               # Arquivos .proto com definição da API
+└── go.mod / go.sum
+```
+
+---
+
+### ✨ Instruções para rodar o projeto
+
+**1. Criar banco SQLite:**
+```bash
+sqlite3 db.sqlite
+```
+
+**2. Criar tabela `categories`:**
+```sql
+CREATE TABLE categories (
+  id TEXT,
+  name TEXT,
+  description TEXT
+);
+```
+
+**3. Gerar os arquivos gRPC:**
+```bash
+protoc --go_out=. --go-grpc_out=. proto/course_category.proto
+```
+
+**4. Iniciar o servidor gRPC:**
+```bash
+go run cmd/grpcServer/main.go
+```
+
+---
+
+### 🧪 Usando o cliente Evans
+
+Abra outro terminal:
+
+```bash
+evans -r repl
+```
+
+#### Selecionar serviço e pacote
+
+```bash
+package pb
+service CategoryService
+```
+
+---
+
+### ✅ Exemplo: Criar categoria
+
+```bash
+call CreateCategory
+name (TYPE_STRING) => GoLang
+description (TYPE_STRING) => Linguagem do Google
+```
+
+**Resposta:**
+```json
+{
+  "category": {
+    "id": "uuid-gerado",
+    "name": "GoLang",
+    "description": "Linguagem do Google"
+  }
+}
+```
+
+---
+
+### 📄 Listar todas as categorias
+
+```bash
+call ListCategories
+```
+
+**Resposta:**
+```json
+{
+  "categories": [
+    {
+      "id": "...",
+      "name": "...",
+      "description": "..."
+    }
+  ]
+}
+```
+
+---
+
+### 🔍 Buscar categoria por ID
+
+```bash
+call GetCategory
+id (TYPE_STRING) => <id-da-categoria>
+```
+
+---
+
+### 🌊 Streaming: Criar streaming de categorias `CategoryStream`
+
+```bash
+call CategoryStream
+```
+
+```bash
+name (TYPE_STRING) => GoLang
+description (TYPE_STRING) => Linguagem do Google
+name (TYPE_STRING) => GoLang
+description (TYPE_STRING) => Linguagem do Google
+name (TYPE_STRING) => GoLang
+description (TYPE_STRING) => Linguagem do Google
+```
+
+> Pressione Ctrl + D para encerrar o streaming.
+
+**Resposta:**
+```json
+{
+  "category": {
+    "id": "ae026098-6d9a-47a2-a31b-db4789d820e9",
+    "name": "meu name",
+    "description": "my descrip"
+  }
+}
+{
+  "category": {
+    "id": "22c832ad-11e6-4113-ab5f-fe78fc6dfbb4",
+    "name": "name 2",
+    "description": "desc 2"
+  }
+}
+```
+
+> A resposta retorna um stream contínuo de categorias. Cada item é recebido separadamente, ideal para casos com grande volume de dados.
+
+---
+
+## Gerar os arquivos Go a partir do arquivo .proto:
+
+```bash
+protoc --go_out=. --go-grpc_out=. proto/course_category.proto
+```
+
+
